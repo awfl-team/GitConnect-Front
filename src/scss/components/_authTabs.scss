@@ -1,0 +1,36 @@
+.auth-tabs {
+    & > div {
+        background-color: $bg--dark !important;
+    }
+
+    .v-tab {
+        font-size: 20px;
+
+        &:not(.v-tab--active) {
+            position: relative;
+
+            &:after {
+                content: '';
+                min-width: 100%;
+                position: absolute;
+                bottom: 0px;
+                height: 2px;
+                background-color: $bg--regular;
+            }
+
+            &:before {
+                opacity: 0;
+
+                &:hover {
+                    opacity: 0.05 !important;
+                }
+            }
+        }
+    }
+
+    #signin, #signup {
+        .container {
+            padding: 12px 0;
+        }
+    }
+}

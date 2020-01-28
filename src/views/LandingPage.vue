@@ -1,38 +1,53 @@
 <template>
-    <v-app>
-        <v-content>
-            <v-container fluid>
-                <v-row>
-                    <v-col cols="12" sm="12" md="6">
-                        <h1>Title</h1>
-                        <p>
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus et
-                            maiores maiores necessitatibus quam veritatis. Accusamus aliquam,
-                            aperiam beatae, blanditiis corporis culpa facilis officiis possimus
-                            quaerat quia quod repellendus ut vero?
-                        </p>
-                    </v-col>
-                    <v-col cols="12" sm="12" md="6">
-                        <v-tabs>
-                            <v-tab href="#signin">Item One</v-tab>
-                            <v-tab-item value="signin">
-                                <h1>Tab 1 content</h1>
-                            </v-tab-item>
-                            <v-tab href="#signup">Item two</v-tab>
-                            <v-tab-item value="signup">
-                                <h1>Tab 2 content</h1>
-                            </v-tab-item>
-                        </v-tabs>
-                    </v-col>
-                </v-row>
-            </v-container>
-        </v-content>
-    </v-app>
+    <v-container>
+        <v-row align="center">
+            <v-col cols="12">
+                <v-img src="gitconnect.png" class="brand-logo" alt="GitConnect logo"></v-img>
+            </v-col>
+        </v-row>
+        <v-row justify-md="space-around">
+            <v-col cols="12" sm="12" md="5">
+                <h1>Hello !</h1>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus et maiores
+                    maiores necessitatibus quam veritatis. Accusamus aliquam, aperiam beatae,
+                    blanditiis corporis culpa facilis officiis possimus quaerat quia quod
+                    repellendus ut vero?
+                </p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus et maiores
+                    maiores necessitatibus quam veritatis. Accusamus aliquam, aperiam beatae,
+                    blanditiis corporis culpa facilis officiis possimus quaerat quia quod
+                    repellendus ut vero?
+                </p>
+                <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus et maiores
+                    maiores necessitatibus quam veritatis. Accusamus aliquam, aperiam beatae,
+                    blanditiis corporis culpa facilis officiis possimus quaerat quia quod
+                    repellendus ut vero?
+                </p>
+            </v-col>
+            <v-col cols="12" sm="12" md="5">
+                <auth-tabs />
+            </v-col>
+        </v-row>
+    </v-container>
 </template>
 
 <script lang="ts">
+import AuthTabs from '../components/Forms/AuthTabs.vue'
+
 export default {
     name: 'landingPage',
-    components: {}
+    components: { AuthTabs }
 }
 </script>
+
+<style scoped>
+.brand-logo {
+    max-width: 270px;
+    min-width: 150px;
+    width: 100%;
+    margin: 25px auto;
+}
+</style>

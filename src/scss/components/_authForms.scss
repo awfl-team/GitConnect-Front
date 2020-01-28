@@ -1,0 +1,11 @@
+#signin, #signup {
+    .container {
+        padding: 12px 0;
+    }
+
+    #form {
+        &-signin, &-signup {
+            width: 100%;
+        }
+    }
+}
