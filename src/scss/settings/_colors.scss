@@ -16,12 +16,22 @@ $bg-focus: transparentize(#61DAFB, 0.85);
 $bg-danger: transparentize(#8F1919, 0.85);
 $bg-success: transparentize(#18AA13, 0.85);
 
-$black: #000000;
+$black--dark: #121212;
+$black--regular: #1F1F1F;
+$black--light: #282828;
 $gray--dark: #707070;
 $gray: #9F9F9F;
 $gray--light: #C9C9C9;
 $white: #FFFFFF;
+$white-full: #FFFFFF;
+$white-86: transparentize(#FFFFFF, 0.14);
+$white-67: transparentize(#FFFFFF, 0.33);
+$white-50: transparentize(#FFFFFF, 0.50);
 
 $green--dark: #187015;
 $green: #69C766;
 $green--light: #C1FFBF;
+
+
+$main-transition: 0.3s cubic-bezier(0.25, 0.8, 0.5, 1);
+

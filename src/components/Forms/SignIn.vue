@@ -17,6 +17,12 @@
                 <v-col cols="12">
                     <v-text-field label="Confirm password *" required></v-text-field>
                 </v-col>
+
+                <v-col cols="12">
+                    <div class="button-submit-container">
+                        <button type="submit" class="btn btn-main">Submit</button>
+                    </div>
+                </v-col>
             </v-form>
         </v-row>
     </v-container>

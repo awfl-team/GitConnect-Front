@@ -1,0 +1,55 @@
+.v-input__slot {
+    padding: 17px;
+    background-color: $bg-focus;
+
+
+    &:before {
+        border-color: transparent !important;
+    }
+}
+
+.v-input {
+    padding: 0 !important;
+}
+
+
+.text-input-container {
+    display: flex;
+    align-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+
+    label, input {
+        flex: 1 0 100%;
+    }
+
+    label {
+        font-size: 20px;
+    }
+
+    input {
+        &[type="text"] {
+            height: 50px;
+            background-color: $bg-focus;
+            padding: 0 10px;
+            font-size: 16px;
+            color: $white-67;
+        }
+
+        &:focus {
+            border-bottom: 2px solid $primary;
+        }
+
+        &.valid {
+
+        }
+
+        &.invalid {
+
+        }
+
+        &:focus {
+
+        }
+    }
+}

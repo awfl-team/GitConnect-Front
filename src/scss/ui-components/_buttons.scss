@@ -1,0 +1,21 @@
+.button-submit-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0 10px;
+}
+
+.btn {
+    &-main {
+        border: 2px solid $primary;
+        border-radius: 25px;
+        padding: 10px 20px;
+        width: 50%;
+        transition: background-color $main-transition;
+
+        &:hover {
+            background-color: $bg-focus;
+        }
+    }
+}
