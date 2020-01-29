@@ -1,24 +1,26 @@
-<template id="signup">
+<template id="signin">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signup">
+            <v-form ref="form" id="form-signin">
                 <v-col cols="12">
-                    <div class="text-input-container" tabindex="2">
-                        <label for="input-login">Mail / Username</label>
-                        <input id="input-login" type="text" required />
-                    </div>
+                    <v-text-field label="E-mail *" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12">
-                    <div class="text-input-container">
-                        <label for="input-password">Password</label>
-                        <input id="input-password" type="text" required />
-                    </div>
+                    <v-text-field label="Name *" required></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                    <v-text-field label="Password *" required></v-text-field>
+                </v-col>
+
+                <v-col cols="12">
+                    <v-text-field label="Confirm password *" required></v-text-field>
                 </v-col>
 
                 <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" class="btn btn-main">Submit</button>
+                        <button type="submit" class="btn btn-main">Sign in</button>
                     </div>
                 </v-col>
             </v-form>
@@ -28,7 +30,7 @@
 
 <script>
 export default {
-    name: 'SignUp'
+    name: 'SignIn'
 }
 </script>
 

@@ -1,6 +1,7 @@
 .auth-tabs {
     & > div {
         background-color: $bg--dark !important;
+        margin-bottom: 10px;
     }
 
     .v-tab {
