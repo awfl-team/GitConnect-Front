@@ -1,12 +1,14 @@
-.v-input {
+/*.v-input {
     padding: 0 !important;
-    margin: 10px 0 !important;
-
-    &__slot {
-        &:before {
-            border-color: $black--regular !important;
+    margin: 10px 0 30px !important;
+    &:not(.v-input--has-state) {
+        .v-input__slot {
+            &:before {
+                border-color: $black--regular !important;
+            }
         }
     }
+
 
     .v-label {
         left: 10px !important;
@@ -23,5 +25,28 @@
         line-height: 50px !important;
         background-color: $bg-focus !important;
         padding: 10px !important;
+    }
+}*/
+
+.v-input {
+    margin-bottom: 10px !important;
+
+    fieldset {
+        border-color: $primary !important;
+        background-color: $bg-focus !important;
+    }
+
+    &.success--text {
+        fieldset {
+            border-color: $success !important;
+            background-color: $bg-success !important;
+        }
+    }
+
+    &.error--text {
+        fieldset {
+            border-color: $danger !important;
+            background-color: $bg-danger !important;
+        }
     }
 }

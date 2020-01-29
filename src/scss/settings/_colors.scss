@@ -1,6 +1,6 @@
 $primary: #61DAFB;
-$success: #18AA13;
-$danger: #E80C0C;
+$success: #4caf50 ;
+$danger: #ff5252 ;
 $warning: #E57E09;
 
 $github-theme: #121212;
@@ -12,9 +12,9 @@ $bg--regular: #1F1F1F;
 $bg--light: #282828;
 
 
-$bg-focus: transparentize(#61DAFB, 0.85);
-$bg-danger: transparentize(#8F1919, 0.85);
-$bg-success: transparentize(#18AA13, 0.85);
+$bg-focus: transparentize($primary, 0.85);
+$bg-danger: transparentize($danger , 0.85);
+$bg-success: transparentize($success, 0.85);
 
 $black--dark: #121212;
 $black--regular: #1F1F1F;
