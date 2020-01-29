@@ -32,7 +32,7 @@ export default class UserHelper {
         confirmPassword: string
     ): boolean | string {
         if (password !== confirmPassword) {
-            return 'Password and confirmed password must identical'
+            return 'Password and confirmed password must be identical'
         }
 
         return true

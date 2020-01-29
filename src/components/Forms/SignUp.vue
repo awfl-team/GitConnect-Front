@@ -62,9 +62,17 @@
                 </v-col>
 
                 <v-col cols="12">
+                    <v-checkbox
+                        :rules="[v => !!v || 'You must agree to continue!']"
+                        label="I understand that the given informations are only used to access to GitConnect's services"
+                        required
+                    ></v-checkbox>
+                </v-col>
+
+                <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" v-on:click="validateForm" class="btn btn-main">
-                            Sign in
+                        <button type="submit" class="btn btn-main">
+                            Sign up
                         </button>
                     </div>
                 </v-col>
@@ -86,19 +94,19 @@ export default {
         valid: true
     }),
     methods: {
-        usernameRules(username): boolean | string {
+        usernameRules(username: string): boolean | string {
             this.username = username
             return UserHelper.verifyUserUsernameFormat(username)
         },
-        emailRules(email): boolean | string {
+        emailRules(email: string): boolean | string {
             this.email = email
             return UserHelper.verifyUserMailFormat(email)
         },
-        passwordRules(password): boolean | string {
+        passwordRules(password: string): boolean | string {
             this.password = password
             return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
         },
-        confirmPasswordRules(confirmPassword): boolean | string {
+        confirmPasswordRules(confirmPassword: string): boolean | string {
             this.confirmPassword = confirmPassword
             return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
         },
