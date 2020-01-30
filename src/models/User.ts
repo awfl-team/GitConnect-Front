@@ -1,7 +1,6 @@
-export class User {
+export default class User {
     id?: string
     username?: string
     email?: string
     password?: string
-
 }

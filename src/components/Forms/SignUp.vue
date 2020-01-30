@@ -1,7 +1,7 @@
 <template id="signup">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signup" v-model="valid" lazy-validation>
+            <v-form ref="form" id="form-signup" lazy-validation>
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail *"
@@ -63,7 +63,7 @@
 
                 <v-col cols="12">
                     <v-checkbox
-                        :rules="[v => !!v || 'You must agree to continue!']"
+                        :rules="[isChecked => !!isChecked || 'You must agree to continue!']"
                         label="I understand that the given informations are only used to access to GitConnect's services"
                         required
                     ></v-checkbox>
@@ -71,7 +71,7 @@
 
                 <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" class="btn btn-main">
+                        <button type="submit" class="btn btn-main" @click="validateForm">
                             Sign up
                         </button>
                     </div>
@@ -85,43 +85,48 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import UserHelper from '@/helpers/UserHelper'
-import { User } from '@/models/User'
+import User from '@/models/User'
 
 @Component
-export default class App extends Vue {
+export default class SignUp extends Vue {
     $refs!: {
         form: HTMLFormElement
     }
 
     // Data property
     user: User = new User()
-    confirmPassword!: string
-    valid!: boolean
+    confirmPassword = ''
 
     usernameRules(username: string): boolean | string {
         this.user.username = username
         return UserHelper.verifyUserUsernameFormat(username)
     }
+
     emailRules(email: string): boolean | string {
         this.user.email = email
         return UserHelper.verifyUserMailFormat(email)
     }
+
     passwordRules(password: string): boolean | string {
         this.user.password = password
         return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
     }
+
     confirmPasswordRules(confirmPassword: string): boolean | string {
         this.confirmPassword = confirmPassword
         return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
     }
+
     passwordAndConfirmPasswordRules(): boolean | string {
         return UserHelper.verifyPasswordAndConfirmPassword(this.user.password, this.confirmPassword)
     }
+
     validateForm(): void {
         if (this.$refs.form.validate()) {
             this.submitForm()
         }
     }
+
     submitForm(): void {
         alert('FormIsSubmitted')
     }
