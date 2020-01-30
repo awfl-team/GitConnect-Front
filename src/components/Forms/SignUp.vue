@@ -5,9 +5,9 @@
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail *"
-                        :model="email"
+                        :model="user.email"
                         :rules="[emailRules]"
-                        :success="emailRules && !!email"
+                        :success="emailRules && !!user.email"
                         required
                         outlined
                         dark
@@ -19,9 +19,9 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Username *"
-                        :model="username"
+                        :model="user.username"
                         :rules="[usernameRules]"
-                        :success="usernameRules && !!username"
+                        :success="usernameRules && !!user.username"
                         outlined
                         dark
                         required
@@ -32,9 +32,9 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Password *"
-                        :model="password"
+                        :model="user.password"
                         :rules="[passwordRules]"
-                        :success="passwordRules && !!password"
+                        :success="passwordRules && !!user.password"
                         type="password"
                         outlined
                         dark
@@ -82,48 +82,48 @@
 </template>
 
 <script lang="ts">
-import UserHelper from '../../helpers/UserHelper'
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
+import UserHelper from '@/helpers/UserHelper'
+import { User } from '@/models/User'
 
-export default {
-    name: 'SignUp',
-    data: () => ({
-        username: null,
-        email: null,
-        password: null,
-        confirmPassword: null,
-        valid: true
-    }),
-    methods: {
-        usernameRules(username: string): boolean | string {
-            this.username = username
-            return UserHelper.verifyUserUsernameFormat(username)
-        },
-        emailRules(email: string): boolean | string {
-            this.email = email
-            return UserHelper.verifyUserMailFormat(email)
-        },
-        passwordRules(password: string): boolean | string {
-            this.password = password
-            return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
-        },
-        confirmPasswordRules(confirmPassword: string): boolean | string {
-            this.confirmPassword = confirmPassword
-            return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
-        },
-        passwordAndConfirmPasswordRules(): boolean | string {
-            return UserHelper.verifyPasswordAndConfirmPassword(this.password, this.confirmPassword)
-        },
-        validateForm(): void {
-            if (this.$refs.form.validate()) {
-                this.submitForm()
-            }
+@Component
+export default class App extends Vue {
+    $refs!: {
+        form: HTMLFormElement
+    }
 
-            return
-        },
-        submitForm(): void {
-            alert('FormIsSubmitted')
-            return
+    // Data property
+    user: User = new User()
+    confirmPassword!: string
+    valid!: boolean
+
+    usernameRules(username: string): boolean | string {
+        this.user.username = username
+        return UserHelper.verifyUserUsernameFormat(username)
+    }
+    emailRules(email: string): boolean | string {
+        this.user.email = email
+        return UserHelper.verifyUserMailFormat(email)
+    }
+    passwordRules(password: string): boolean | string {
+        this.user.password = password
+        return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
+    }
+    confirmPasswordRules(confirmPassword: string): boolean | string {
+        this.confirmPassword = confirmPassword
+        return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
+    }
+    passwordAndConfirmPasswordRules(): boolean | string {
+        return UserHelper.verifyPasswordAndConfirmPassword(this.user.password, this.confirmPassword)
+    }
+    validateForm(): void {
+        if (this.$refs.form.validate()) {
+            this.submitForm()
         }
+    }
+    submitForm(): void {
+        alert('FormIsSubmitted')
     }
 }
 </script>

@@ -28,7 +28,7 @@ export default class UserHelper {
     }
 
     public static verifyPasswordAndConfirmPassword(
-        password: string,
+        password: string | undefined,
         confirmPassword: string
     ): boolean | string {
         if (password !== confirmPassword) {
