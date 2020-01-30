@@ -5,7 +5,7 @@
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail *"
-                        :model="user.email"
+                        v-model="user.email"
                         :rules="[emailRules]"
                         :success="emailRules && !!user.email"
                         required
@@ -19,7 +19,7 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Username *"
-                        :model="user.username"
+                        v-model="user.username"
                         :rules="[usernameRules]"
                         :success="usernameRules && !!user.username"
                         outlined
@@ -32,7 +32,7 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Password *"
-                        :model="user.password"
+                        v-model="user.password"
                         :rules="[passwordRules]"
                         :success="passwordRules && !!user.password"
                         type="password"
@@ -46,7 +46,7 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Confirm password *"
-                        :model="confirmPassword"
+                        v-model="confirmPassword"
                         :rules="[confirmPasswordRules, passwordAndConfirmPasswordRules]"
                         :success="
                             confirmPasswordRules &&
@@ -86,6 +86,8 @@ import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import UserHelper from '@/helpers/UserHelper'
 import User from '@/models/User'
+import UserHttpService from '@/httpServices/UserHttpService'
+import AuthHelper from '@/helpers/AuthHelper'
 
 @Component
 export default class SignUp extends Vue {
@@ -98,22 +100,18 @@ export default class SignUp extends Vue {
     confirmPassword = ''
 
     usernameRules(username: string): boolean | string {
-        this.user.username = username
         return UserHelper.verifyUserUsernameFormat(username)
     }
 
     emailRules(email: string): boolean | string {
-        this.user.email = email
         return UserHelper.verifyUserMailFormat(email)
     }
 
     passwordRules(password: string): boolean | string {
-        this.user.password = password
         return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
     }
 
     confirmPasswordRules(confirmPassword: string): boolean | string {
-        this.confirmPassword = confirmPassword
         return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
     }
 
@@ -128,7 +126,9 @@ export default class SignUp extends Vue {
     }
 
     submitForm(): void {
-        alert('FormIsSubmitted')
+        UserHttpService.signUp(this.user).then(response => {
+            AuthHelper.setTokenInLocalStorage(response.data)
+        })
     }
 }
 </script>
