@@ -126,8 +126,9 @@ export default class SignUp extends Vue {
     }
 
     submitForm(): void {
-        UserHttpService.signUp(this.user).then(response => {
-            AuthHelper.setTokenInLocalStorage(response.data)
+        UserHttpService.signUp(this.user).then((response): void => {
+            AuthHelper.setTokenInLocalStorage(response.data.token)
+            alert('You are sign up');
         })
     }
 }
