@@ -142,9 +142,13 @@ export default class SignUp extends Vue {
 
     submitForm(): void {
         if (this.formIsValid) {
-            UserHttpService.signUp(this.user).then((response: AxiosResponse): void => {
-                AuthHelper.setTokenInLocalStorage(response.data.token)
-            })
+            UserHttpService.register(this.user)
+                .then((response: AxiosResponse): void => {
+                    AuthHelper.setTokenInLocalStorage(response.data.token)
+                })
+                .catch((): void => {
+                    console.log('error')
+                })
         }
     }
 }

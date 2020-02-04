@@ -1,7 +1,7 @@
 <template id="signin">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signin" lazy-validation>
+            <v-form ref="form" id="form-signin">
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail / Username *"
@@ -28,7 +28,7 @@
 
                 <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" v-on:click="submitForm" class="btn btn-main">
+                        <button type="submit" class="btn btn-main">
                             Sign in
                         </button>
                     </div>
@@ -47,9 +47,5 @@ import User from '@/models/User'
 export default class SignIn extends Vue {
     // Data property
     user = new User()
-
-    submitForm(): void {
-        alert('FormIsSubmitted')
-    }
 }
 </script>
