@@ -1,18 +1,17 @@
 import axios, { AxiosInstance, AxiosRequestConfig } from "axios";
 import AuthHelper from '@/helpers/AuthHelper'
 
-const api: AxiosInstance = axios.create({
+const API: AxiosInstance = axios.create({
     baseURL: process.env.VUE_APP_BASE_URL
 })
 
-export default api
-
-api.interceptors.request.use(
+API.interceptors.request.use(
     (config): AxiosRequestConfig => {
         const token = AuthHelper.getToken()
-        const configuration = config
-        if (token !== null) configuration.headers.Authorization = `Bearer ${token}`
-        return configuration
+        if (token !== null) config.headers.Authorization = `Bearer ${token}`
+        return config
     },
     (error): Promise<never> => Promise.reject(error)
 )
+
+export default API

@@ -84,6 +84,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
+import { AxiosResponse } from 'axios'
 import UserHelper from '@/helpers/UserHelper'
 import User from '@/models/User'
 import UserHttpService from '@/httpServices/UserHttpService'
@@ -126,9 +127,9 @@ export default class SignUp extends Vue {
     }
 
     submitForm(): void {
-        UserHttpService.signUp(this.user).then((response): void => {
+        UserHttpService.signUp(this.user).then((response: AxiosResponse): void => {
             AuthHelper.setTokenInLocalStorage(response.data.token)
-            alert('You are sign up');
+            console.log('You are sign up')
         })
     }
 }
