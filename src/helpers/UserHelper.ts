@@ -1,5 +1,7 @@
+import { FieldValidation } from '@/types/FieldValidation'
+
 export default class UserHelper {
-    public static verifyUsernameFormat(username: string | undefined) {
+    public static verifyUsernameFormat(username: string | undefined): FieldValidation {
         const usernameFormat = /^[aA-zZ0-9_-]{3,16}$/
 
         if (username === '' || !username) {
@@ -15,7 +17,7 @@ export default class UserHelper {
         return { isValid: true, message: 'Valid username format' }
     }
 
-    public static verifyEmailFormat(email: string | undefined) {
+    public static verifyEmailFormat(email: string | undefined): FieldValidation {
         const emailFormat = /^[a-zA-Z0-9-+_+]+@.+\.[a-zA-Z0-9-+_+]+$/
 
         if (email === '' || !email) {
@@ -30,7 +32,7 @@ export default class UserHelper {
     public static verifyPasswordFormat(
         password: string | undefined,
         confirmPassword: string | undefined
-    ) {
+    ): FieldValidation {
         const passwordFormat = /^[a-zA-Z0-9_+-+\w!@&.]{8,16}$/
 
         if (password === '' || !password) {

@@ -94,15 +94,16 @@ import User from '@/models/User'
 import UserHttpService from '@/httpServices/UserHttpService'
 import AuthHelper from '@/helpers/AuthHelper'
 import UserHelper from '@/helpers/UserHelper'
+import { FieldValidation } from '@/types/FieldValidation'
 
 @Component
 export default class SignUp extends Vue {
     // Data property
     user: User = new User()
     formIsValid = false
-    usernameValidation = { isValid: false, message: '' }
-    emailValidation = { isValid: false, message: '' }
-    passwordValidation = { isValid: false, message: '' }
+    usernameValidation: FieldValidation = { isValid: false, message: '' }
+    emailValidation: FieldValidation = { isValid: false, message: '' }
+    passwordValidation: FieldValidation = { isValid: false, message: '' }
 
     validateField(fieldName: string): void {
         switch (fieldName) {
