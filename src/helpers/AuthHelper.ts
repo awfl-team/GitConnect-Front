@@ -1,4 +1,4 @@
-import jwtdecode, { Options } from "jwt-decode";
+import jwtdecode, { Options } from 'jwt-decode'
 
 export default class AuthHelper {
     static getUserInfo(token: string): Options {
@@ -14,7 +14,7 @@ export default class AuthHelper {
         localStorage.setItem('GitConnectToken', token.replace(/['"]+/g, ''))
     }
 
-    public static getToken(): string | null{
+    public static getToken(): string | null {
         return localStorage.getItem('GitConnectToken')
     }
 }

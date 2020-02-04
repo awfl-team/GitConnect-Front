@@ -1,56 +1,62 @@
 export default class UserHelper {
-    public static verifyUserUsernameFormat(username: string): boolean | string {
+    public static verifyUsernameFormat(username: string | undefined) {
         const usernameFormat = /^[aA-zZ0-9_-]{3,16}$/
 
         if (username === '' || !username) {
-            return 'Username is required'
+            return { isValid: false, message: 'Username is required' }
         } else if (username.length < 3) {
-            return 'Username must be more than 3 characters'
+            return { isValid: false, message: 'Username must be more than 3 characters' }
         } else if (username.length > 16) {
-            return 'Username must be less than 16 characters'
+            return { isValid: false, message: 'Username must be less than 16 characters' }
         } else if (!usernameFormat.test(username)) {
-            return 'Username must only contains characters or digits'
+            return { isValid: false, message: 'Username must only contains characters or digits' }
         }
 
-        return true
+        return { isValid: true, message: 'Valid username format' }
     }
 
-    public static verifyUserMailFormat(email: string): boolean | string {
+    public static verifyEmailFormat(email: string | undefined) {
         const emailFormat = /^[a-zA-Z0-9-+_+]+@.+\.[a-zA-Z0-9-+_+]+$/
 
         if (email === '' || !email) {
-            return 'E-Mail is required'
+            return { isValid: false, message: 'E-Mail is required' }
         } else if (!emailFormat.test(email)) {
-            return 'E-Mail is not in a valid format'
+            return { isValid: false, message: 'E-Mail is not in a valid format' }
         }
 
-        return true
+        return { isValid: true, message: 'Valid format email' }
     }
 
-    public static verifyPasswordAndConfirmPassword(
+    public static verifyPasswordFormat(
         password: string | undefined,
-        confirmPassword: string
-    ): boolean | string {
-        if (password !== confirmPassword) {
-            return 'Password and confirmed password must be identical'
-        }
-
-        return true
-    }
-
-    public static verifyPasswordOrConfirmPasswordFormat(password: string): boolean | string {
+        confirmPassword: string | undefined
+    ) {
         const passwordFormat = /^[a-zA-Z0-9_+-+\w!@&.]{8,16}$/
 
         if (password === '' || !password) {
-            return 'Password is required'
+            return { isValid: false, message: 'Password is required' }
         } else if (password.length < 8) {
-            return 'Password must be more than 8 characters'
+            return { isValid: false, message: 'Password must be more than 8 characters' }
         } else if (password.length > 16) {
-            return 'Password must be less than 16 characters'
+            return { isValid: false, message: 'Password must be less than 16 characters' }
         } else if (!passwordFormat.test(password)) {
-            return 'Password is not in a valid format'
+            return { isValid: false, message: 'Password is not in a valid format' }
         }
 
-        return true
+        if (confirmPassword === '' || !confirmPassword) {
+            return { isValid: false, message: 'Confirmed password is required' }
+        } else if (confirmPassword.length < 8) {
+            return { isValid: false, message: 'Confirmed password must be more than 8 characters' }
+        } else if (confirmPassword.length > 16) {
+            return { isValid: false, message: 'Confirmed password must be less than 16 characters' }
+        } else if (!passwordFormat.test(password)) {
+            return { isValid: false, message: 'Confirmed password is not in a valid format' }
+        }
+
+        if (password !== confirmPassword) {
+            return { isValid: false, message: 'Password and confirmed password must be identical' }
+        }
+
+        return { isValid: true, message: 'Password and confirmed password are valid' }
     }
 }

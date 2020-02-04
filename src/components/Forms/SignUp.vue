@@ -1,13 +1,14 @@
 <template id="signup">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signup" lazy-validation>
+            <v-form ref="form" id="form-signup" @submit="validateAndSubmitFormIfIsValid">
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail *"
                         v-model="user.email"
-                        :rules="[emailRules]"
-                        :success="emailRules && !!user.email"
+                        @keyup="validateField('email')"
+                        :error-messages="!emailValidation.isValid ? emailValidation.message : ''"
+                        :success-messages="emailValidation.isValid ? emailValidation.message : ''"
                         required
                         outlined
                         dark
@@ -20,8 +21,13 @@
                     <v-text-field
                         label="Username *"
                         v-model="user.username"
-                        :rules="[usernameRules]"
-                        :success="usernameRules && !!user.username"
+                        @keyup="validateField('username')"
+                        :error-messages="
+                            !usernameValidation.isValid ? usernameValidation.message : ''
+                        "
+                        :success-messages="
+                            usernameValidation.isValid ? usernameValidation.message : ''
+                        "
                         outlined
                         dark
                         required
@@ -33,8 +39,14 @@
                     <v-text-field
                         label="Password *"
                         v-model="user.password"
-                        :rules="[passwordRules]"
-                        :success="passwordRules && !!user.password"
+                        @keyup="validateField('password')"
+                        :error-messages="
+                            !passwordValidation.isValid ? passwordValidation.message : ''
+                        "
+                        :success="passwordValidation.isValid"
+                        :success-messages="
+                            passwordValidation.isValid ? passwordValidation.message : ''
+                        "
                         type="password"
                         outlined
                         dark
@@ -46,12 +58,13 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Confirm password *"
-                        v-model="confirmPassword"
-                        :rules="[confirmPasswordRules, passwordAndConfirmPasswordRules]"
-                        :success="
-                            confirmPasswordRules &&
-                                passwordAndConfirmPasswordRules &&
-                                !!confirmPassword
+                        v-model="user.confirmPassword"
+                        @keyup="validateField('password')"
+                        :error-messages="
+                            !passwordValidation.isValid ? passwordValidation.message : ''
+                        "
+                        :success-messages="
+                            passwordValidation.isValid ? passwordValidation.message : ''
                         "
                         outlined
                         dark
@@ -62,16 +75,8 @@
                 </v-col>
 
                 <v-col cols="12">
-                    <v-checkbox
-                        :rules="[isChecked => !!isChecked || 'You must agree to continue!']"
-                        label="I understand that the given informations are only used to access to GitConnect's services"
-                        required
-                    ></v-checkbox>
-                </v-col>
-
-                <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" class="btn btn-main" @click="validateForm">
+                        <button type="submit" class="btn btn-main">
                             Sign up
                         </button>
                     </div>
@@ -85,52 +90,61 @@
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
-import UserHelper from '@/helpers/UserHelper'
 import User from '@/models/User'
 import UserHttpService from '@/httpServices/UserHttpService'
 import AuthHelper from '@/helpers/AuthHelper'
+import UserHelper from '@/helpers/UserHelper'
 
 @Component
 export default class SignUp extends Vue {
-    $refs!: {
-        form: HTMLFormElement
-    }
-
     // Data property
     user: User = new User()
-    confirmPassword = ''
+    formIsValid = false
+    usernameValidation = { isValid: false, message: '' }
+    emailValidation = { isValid: false, message: '' }
+    passwordValidation = { isValid: false, message: '' }
 
-    usernameRules(username: string): boolean | string {
-        return UserHelper.verifyUserUsernameFormat(username)
+    validateField(fieldName: string): void {
+        switch (fieldName) {
+            case 'username':
+                this.usernameValidation = UserHelper.verifyUsernameFormat(this.user.username)
+                break
+            case 'email':
+                this.emailValidation = UserHelper.verifyEmailFormat(this.user.email)
+                break
+            case 'password':
+                this.passwordValidation = UserHelper.verifyPasswordFormat(
+                    this.user.password,
+                    this.user.confirmPassword
+                )
+                break
+        }
     }
 
-    emailRules(email: string): boolean | string {
-        return UserHelper.verifyUserMailFormat(email)
-    }
+    validateAndSubmitFormIfIsValid(): void {
+        this.usernameValidation = UserHelper.verifyUsernameFormat(this.user.username)
+        this.emailValidation = UserHelper.verifyEmailFormat(this.user.email)
+        this.passwordValidation = UserHelper.verifyPasswordFormat(
+            this.user.password,
+            this.user.confirmPassword
+        )
 
-    passwordRules(password: string): boolean | string {
-        return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
-    }
-
-    confirmPasswordRules(confirmPassword: string): boolean | string {
-        return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
-    }
-
-    passwordAndConfirmPasswordRules(): boolean | string {
-        return UserHelper.verifyPasswordAndConfirmPassword(this.user.password, this.confirmPassword)
-    }
-
-    validateForm(): void {
-        if (this.$refs.form.validate()) {
+        if (
+            this.usernameValidation.isValid &&
+            this.passwordValidation.isValid &&
+            this.emailValidation.isValid
+        ) {
+            this.formIsValid = true
             this.submitForm()
         }
     }
 
     submitForm(): void {
-        UserHttpService.signUp(this.user).then((response: AxiosResponse): void => {
-            AuthHelper.setTokenInLocalStorage(response.data.token)
-            console.log('You are sign up')
-        })
+        if (this.formIsValid) {
+            UserHttpService.signUp(this.user).then((response: AxiosResponse): void => {
+                AuthHelper.setTokenInLocalStorage(response.data.token)
+            })
+        }
     }
 }
 </script>
