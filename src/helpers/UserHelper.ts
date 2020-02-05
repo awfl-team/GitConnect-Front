@@ -80,18 +80,23 @@ export default class UserHelper {
 
     public static getFieldHintByType(fieldName: string): string {
         switch (fieldName) {
-            case 'username':
-                return 'Username must be between 3 and 16 characters long'
             case 'email':
-                return 'Must be like : exemple@gitconnect.com'
+                return 'Your E-mail must be like : exemple@gitconnect.com'
+            case 'username':
+                return 'Your username must be between 3 and 16 characters long'
+            case 'login':
+                return 'Type your username or your email'
             case 'password':
                 return (
-                    'Password must be between 8 and 16 characters, it may contains digits and' +
+                    'Your password must be the same as your confirmed password and be between 8' +
+                    ' and 16 characters long, it may contains digits' +
+                    ' and' +
                     ' the following characters : -_!@&.'
                 )
             case 'confirmPassword':
                 return (
-                    'Confirm password must be between 8 and 16 characters, ' +
+                    'Your confirmed password must be the same as your password and be between 8' +
+                    ' and 16 characters long, ' +
                     'it may contains digits and the following characters : -_!@&.'
                 )
             default:

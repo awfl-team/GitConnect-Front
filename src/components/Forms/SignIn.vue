@@ -8,6 +8,7 @@
                         v-model="login"
                         @change="validateField('login')"
                         :error-messages="!loginValidation.isValid ? loginValidation.message : ''"
+                        :hint="getFieldHint('login')"
                         required
                         outlined
                         dark
@@ -24,6 +25,7 @@
                         :error-messages="
                             !passwordValidation.isValid ? passwordValidation.message : ''
                         "
+                        :hint="getFieldHint('password')"
                         :append-icon="passwordTextShouldBeVisible ? 'mdi-eye' : 'mdi-eye-off'"
                         :type="passwordTextShouldBeVisible ? 'text' : 'password'"
                         @click:append="showPasswordText"
@@ -84,6 +86,10 @@ export default class SignIn extends Vue {
 
     showPasswordText(): void {
         this.passwordTextShouldBeVisible = !this.passwordTextShouldBeVisible
+    }
+
+    getFieldHint(fieldName: string): string {
+        return UserHelper.getFieldHintByType(fieldName)
     }
 
     validateAndSubmitFormIfIsValid(): void {
