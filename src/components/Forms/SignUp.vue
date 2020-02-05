@@ -6,7 +6,7 @@
                     <v-text-field
                         label="E-mail *"
                         v-model="user.email"
-                        @keyup="validateField('email')"
+                        @change="validateField('email')"
                         :error-messages="!emailValidation.isValid ? emailValidation.message : ''"
                         :success-messages="emailValidation.isValid ? emailValidation.message : ''"
                         required
@@ -21,7 +21,7 @@
                     <v-text-field
                         label="Username *"
                         v-model="user.username"
-                        @keyup="validateField('username')"
+                        @change="validateField('username')"
                         :error-messages="
                             !usernameValidation.isValid ? usernameValidation.message : ''
                         "
@@ -39,7 +39,7 @@
                     <v-text-field
                         label="Password *"
                         v-model="user.password"
-                        @keyup="validateField('password')"
+                        @change="validateField('password')"
                         :error-messages="
                             !passwordValidation.isValid ? passwordValidation.message : ''
                         "
@@ -59,7 +59,7 @@
                     <v-text-field
                         label="Confirm password *"
                         v-model="user.confirmPassword"
-                        @keyup="validateField('password')"
+                        @change="validateField('password')"
                         :error-messages="
                             !passwordValidation.isValid ? passwordValidation.message : ''
                         "

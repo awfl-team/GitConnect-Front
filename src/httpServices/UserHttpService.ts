@@ -6,7 +6,7 @@ export default class UserHttpService {
         return API.post('register', user)
     }
 
-    public static login(user: User) {
-        return API.post('login', user)
+    public static login(login: string, password: string) {
+        return API.post('login', { login: login, password: password })
     }
 }

@@ -61,4 +61,20 @@ export default class UserHelper {
 
         return { isValid: true, message: 'Password and confirmed password are valid' }
     }
+
+    public static verifyPasswordIsRequired(password: string): FieldValidation {
+        if (password === '' || !password) {
+            return { isValid: false, message: 'Password is required' }
+        }
+
+        return { isValid: true, message: 'Password is valid' }
+    }
+
+    public static verifyLoginIsRequired(login: string): FieldValidation {
+        if (login === '' || !login) {
+            return { isValid: false, message: 'Login is required' }
+        }
+
+        return { isValid: true, message: 'Login is valid' }
+    }
 }
