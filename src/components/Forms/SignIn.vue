@@ -8,7 +8,6 @@
                         v-model="login"
                         @change="validateField('login')"
                         :error-messages="!loginValidation.isValid ? loginValidation.message : ''"
-                        :success-messages="loginValidation.isValid ? loginValidation.message : ''"
                         required
                         outlined
                         dark
@@ -25,10 +24,9 @@
                         :error-messages="
                             !passwordValidation.isValid ? passwordValidation.message : ''
                         "
-                        :success-messages="
-                            passwordValidation.isValid ? passwordValidation.message : ''
-                        "
-                        type="password"
+                        :append-icon="passwordTextShouldBeVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="passwordTextShouldBeVisible ? 'text' : 'password'"
+                        @click:append="showPasswordText"
                         outlined
                         dark
                         required
@@ -38,8 +36,14 @@
 
                 <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" class="btn btn-main">
-                            Sign in
+                        <button type="submit" class="btn btn-main" :disabled="requestIsPending">
+                            <span v-if="!requestIsPending">Sign in</span>
+                            <v-progress-circular
+                                indeterminate
+                                color="primary"
+                                :size="25"
+                                v-else
+                            ></v-progress-circular>
                         </button>
                     </div>
                 </v-col>
@@ -64,6 +68,8 @@ export default class SignIn extends Vue {
     loginValidation: FieldValidation = { isValid: false, message: '' }
     passwordValidation: FieldValidation = { isValid: false, message: '' }
     formIsValid = false
+    passwordTextShouldBeVisible = false
+    requestIsPending = false
 
     validateField(fieldName: string): void {
         switch (fieldName) {
@@ -74,6 +80,10 @@ export default class SignIn extends Vue {
                 this.passwordValidation = UserHelper.verifyPasswordIsRequired(this.password)
                 break
         }
+    }
+
+    showPasswordText(): void {
+        this.passwordTextShouldBeVisible = !this.passwordTextShouldBeVisible
     }
 
     validateAndSubmitFormIfIsValid(): void {
@@ -88,12 +98,16 @@ export default class SignIn extends Vue {
 
     submitForm(): void {
         if (this.formIsValid) {
+            this.requestIsPending = true
             UserHttpService.login(this.login, this.password)
                 .then((response: AxiosResponse): void => {
                     console.log('success')
                 })
                 .catch((): void => {
                     console.log('error')
+                })
+                .finally((): void => {
+                    this.requestIsPending = false
                 })
         }
     }

@@ -12,6 +12,7 @@
         border-radius: 25px;
         padding: 10px 20px;
         width: 50%;
+        min-height: 50px;
         transition: background-color $main-transition;
 
         &:hover {

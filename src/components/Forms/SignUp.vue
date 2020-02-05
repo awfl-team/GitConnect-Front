@@ -9,6 +9,7 @@
                         @change="validateField('email')"
                         :error-messages="!emailValidation.isValid ? emailValidation.message : ''"
                         :success-messages="emailValidation.isValid ? emailValidation.message : ''"
+                        :hint="getFieldHint('email')"
                         required
                         outlined
                         dark
@@ -28,6 +29,7 @@
                         :success-messages="
                             usernameValidation.isValid ? usernameValidation.message : ''
                         "
+                        :hint="getFieldHint('username')"
                         outlined
                         dark
                         required
@@ -39,7 +41,7 @@
                     <v-text-field
                         label="Password *"
                         v-model="user.password"
-                        @change="validateField('password')"
+                        @keyup="validateField('password')"
                         :error-messages="
                             !passwordValidation.isValid ? passwordValidation.message : ''
                         "
@@ -47,7 +49,10 @@
                         :success-messages="
                             passwordValidation.isValid ? passwordValidation.message : ''
                         "
-                        type="password"
+                        :hint="getFieldHint('password')"
+                        :append-icon="passwordTextShouldBeVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="passwordTextShouldBeVisible ? 'text' : 'password'"
+                        @click:append="showPasswordText"
                         outlined
                         dark
                         required
@@ -59,16 +64,19 @@
                     <v-text-field
                         label="Confirm password *"
                         v-model="user.confirmPassword"
-                        @change="validateField('password')"
+                        @keyup="validateField('password')"
                         :error-messages="
                             !passwordValidation.isValid ? passwordValidation.message : ''
                         "
                         :success-messages="
                             passwordValidation.isValid ? passwordValidation.message : ''
                         "
+                        :hint="getFieldHint('confirmPassword')"
+                        :append-icon="passwordTextShouldBeVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="passwordTextShouldBeVisible ? 'text' : 'password'"
+                        @click:append="showPasswordText"
                         outlined
                         dark
-                        type="password"
                         required
                         autocomplete="off"
                     ></v-text-field>
@@ -76,8 +84,14 @@
 
                 <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" class="btn btn-main">
-                            Sign up
+                        <button type="submit" class="btn btn-main" :disabled="requestIsPending">
+                            <span v-if="!requestIsPending">Sign up</span>
+                            <v-progress-circular
+                                indeterminate
+                                color="primary"
+                                :size="25"
+                                v-else
+                            ></v-progress-circular>
                         </button>
                     </div>
                 </v-col>
@@ -101,6 +115,8 @@ export default class SignUp extends Vue {
     // Data property
     user: User = new User()
     formIsValid = false
+    requestIsPending = false
+    passwordTextShouldBeVisible = false
     usernameValidation: FieldValidation = { isValid: false, message: '' }
     emailValidation: FieldValidation = { isValid: false, message: '' }
     passwordValidation: FieldValidation = { isValid: false, message: '' }
@@ -120,6 +136,14 @@ export default class SignUp extends Vue {
                 )
                 break
         }
+    }
+
+    getFieldHint(fieldName: string): string {
+        return UserHelper.getFieldHintByType(fieldName)
+    }
+
+    showPasswordText(): void {
+        this.passwordTextShouldBeVisible = !this.passwordTextShouldBeVisible
     }
 
     validateAndSubmitFormIfIsValid(): void {
@@ -142,12 +166,16 @@ export default class SignUp extends Vue {
 
     submitForm(): void {
         if (this.formIsValid) {
+            this.requestIsPending = true
             UserHttpService.register(this.user)
                 .then((response: AxiosResponse): void => {
                     AuthHelper.setTokenInLocalStorage(response.data.token)
                 })
                 .catch((): void => {
                     console.log('error')
+                })
+                .finally((): void => {
+                    this.requestIsPending = false
                 })
         }
     }

@@ -77,4 +77,25 @@ export default class UserHelper {
 
         return { isValid: true, message: 'Login is valid' }
     }
+
+    public static getFieldHintByType(fieldName: string): string {
+        switch (fieldName) {
+            case 'username':
+                return 'Username must be between 3 and 16 characters long'
+            case 'email':
+                return 'Must be like : exemple@gitconnect.com'
+            case 'password':
+                return (
+                    'Password must be between 8 and 16 characters, it may contains digits and' +
+                    ' the following characters : -_!@&.'
+                )
+            case 'confirmPassword':
+                return (
+                    'Confirm password must be between 8 and 16 characters, ' +
+                    'it may contains digits and the following characters : -_!@&.'
+                )
+            default:
+                return ''
+        }
+    }
 }
