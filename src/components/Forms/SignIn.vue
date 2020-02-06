@@ -51,6 +51,7 @@
                 </v-col>
             </v-form>
         </v-row>
+        <snackbar v-bind:snackBarDetails="snackBarDetails" />
     </v-container>
 </template>
 
@@ -61,8 +62,11 @@ import { AxiosResponse } from 'axios'
 import UserHelper from '@/helpers/UserHelper'
 import { FieldValidation } from '@/types/FieldValidation'
 import UserHttpService from '@/httpServices/UserHttpService'
-
-@Component
+import Snackbar from '../UI/Snackbar.vue'
+import { SnackBarType } from '@/types/SnackBarType'
+@Component({
+    components: { Snackbar }
+})
 export default class SignIn extends Vue {
     // Data property
     login = ''
@@ -72,6 +76,7 @@ export default class SignIn extends Vue {
     formIsValid = false
     passwordTextShouldBeVisible = false
     requestIsPending = false
+    snackBarDetails: SnackBarType = { isActive: false }
 
     validateField(fieldName: string): void {
         switch (fieldName) {
@@ -108,9 +113,19 @@ export default class SignIn extends Vue {
             UserHttpService.login(this.login, this.password)
                 .then((response: AxiosResponse): void => {
                     console.log('success')
+                    this.snackBarDetails = {
+                        isActive: true,
+                        message: 'Front or API success ?',
+                        color: 'error'
+                    }
                 })
                 .catch((): void => {
                     console.log('error')
+                    this.snackBarDetails = {
+                        isActive: true,
+                        message: 'Front or API error ?',
+                        color: 'error'
+                    }
                 })
                 .finally((): void => {
                     this.requestIsPending = false

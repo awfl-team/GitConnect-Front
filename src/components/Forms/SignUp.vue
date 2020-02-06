@@ -109,6 +109,7 @@ import UserHttpService from '@/httpServices/UserHttpService'
 import AuthHelper from '@/helpers/AuthHelper'
 import UserHelper from '@/helpers/UserHelper'
 import { FieldValidation } from '@/types/FieldValidation'
+import { SnackBarType } from '@/types/SnackBarType'
 
 @Component
 export default class SignUp extends Vue {
@@ -120,7 +121,9 @@ export default class SignUp extends Vue {
     usernameValidation: FieldValidation = { isValid: false, message: '' }
     emailValidation: FieldValidation = { isValid: false, message: '' }
     passwordValidation: FieldValidation = { isValid: false, message: '' }
+    snackBarDetails: SnackBarType = { isActive: false }
 
+    // Methods
     validateField(fieldName: string): void {
         switch (fieldName) {
             case 'username':
@@ -170,9 +173,20 @@ export default class SignUp extends Vue {
             UserHttpService.register(this.user)
                 .then((response: AxiosResponse): void => {
                     AuthHelper.setTokenInLocalStorage(response.data.token)
+                    console.log('success')
+                    this.snackBarDetails = {
+                        isActive: true,
+                        message: 'Front or API success ?',
+                        color: 'success'
+                    }
                 })
                 .catch((): void => {
                     console.log('error')
+                    this.snackBarDetails = {
+                        isActive: true,
+                        message: 'Front or API error ?',
+                        color: 'error'
+                    }
                 })
                 .finally((): void => {
                     this.requestIsPending = false

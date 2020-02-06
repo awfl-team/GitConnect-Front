@@ -63,19 +63,15 @@ export default class UserHelper {
     }
 
     public static verifyPasswordIsRequired(password: string): FieldValidation {
-        if (password === '' || !password) {
-            return { isValid: false, message: 'Password is required' }
-        }
-
-        return { isValid: true, message: 'Password is valid' }
+        return !password
+            ? { isValid: false, message: 'Password is required' }
+            : { isValid: true, message: 'Password is valid' }
     }
 
     public static verifyLoginIsRequired(login: string): FieldValidation {
-        if (login === '' || !login) {
-            return { isValid: false, message: 'Login is required' }
-        }
-
-        return { isValid: true, message: 'Login is valid' }
+        return !login
+            ? { isValid: false, message: 'Login is required' }
+            : { isValid: true, message: 'Login is valid' }
     }
 
     public static getFieldHintByType(fieldName: string): string {
