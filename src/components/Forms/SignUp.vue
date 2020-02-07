@@ -1,7 +1,7 @@
 <template id="signup">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signup" @submit="validateAndSubmitFormIfIsValid">
+            <v-form ref="form" id="form-signup" @submit.prevent="validateAndSubmitFormIfIsValid">
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail *"
@@ -109,7 +109,7 @@ import UserHttpService from '@/httpServices/UserHttpService'
 import AuthHelper from '@/helpers/AuthHelper'
 import UserHelper from '@/helpers/UserHelper'
 import { FieldValidation } from '@/types/FieldValidation'
-import { SnackBarType } from '@/types/SnackBarType'
+import { SnackBarDetails } from '@/models/SnackBarDetails'
 
 @Component
 export default class SignUp extends Vue {
@@ -121,7 +121,7 @@ export default class SignUp extends Vue {
     usernameValidation: FieldValidation = { isValid: false, message: '' }
     emailValidation: FieldValidation = { isValid: false, message: '' }
     passwordValidation: FieldValidation = { isValid: false, message: '' }
-    snackBarDetails: SnackBarType = { isActive: false }
+    snackBarDetails: SnackBarDetails = { isActive: false }
 
     // Methods
     validateField(fieldName: string): void {

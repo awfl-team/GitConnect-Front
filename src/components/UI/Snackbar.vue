@@ -15,11 +15,11 @@
 <script lang="ts">
 import Vue from 'vue'
 import { Component, Prop } from 'vue-property-decorator'
-import { SnackBarType } from '@/types/SnackBarType'
+import { SnackBarDetails } from '@/models/SnackBarDetails'
 
 @Component()
 export default class Snackbar extends Vue {
     // DataBinding
-    @Prop({ required: true, default: false }) snackBarDetails: SnackBarType
+    @Prop({ required: true, default: false }) snackBarDetails: SnackBarDetails
 }
 </script>

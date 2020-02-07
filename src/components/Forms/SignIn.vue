@@ -1,7 +1,7 @@
 <template id="signin">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signin" @submit="validateAndSubmitFormIfIsValid">
+            <v-form ref="form" id="form-signin" @submit.prevent="validateAndSubmitFormIfIsValid">
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail / Username *"
@@ -63,7 +63,8 @@ import UserHelper from '@/helpers/UserHelper'
 import { FieldValidation } from '@/types/FieldValidation'
 import UserHttpService from '@/httpServices/UserHttpService'
 import Snackbar from '../UI/Snackbar.vue'
-import { SnackBarType } from '@/types/SnackBarType'
+import { SnackBarDetails } from '@/models/SnackBarDetails'
+
 @Component({
     components: { Snackbar }
 })
@@ -76,7 +77,7 @@ export default class SignIn extends Vue {
     formIsValid = false
     passwordTextShouldBeVisible = false
     requestIsPending = false
-    snackBarDetails: SnackBarType = { isActive: false }
+    snackBarDetails: SnackBarDetails = { isActive: false }
 
     validateField(fieldName: string): void {
         switch (fieldName) {
