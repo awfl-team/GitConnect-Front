@@ -97,6 +97,7 @@
                 </v-col>
             </v-form>
         </v-row>
+        <snackbar v-bind:snackBarDetails="snackBarDetails" />
     </v-container>
 </template>
 
@@ -106,12 +107,14 @@ import { Component } from 'vue-property-decorator'
 import { AxiosResponse } from 'axios'
 import User from '@/models/User'
 import UserHttpService from '@/httpServices/UserHttpService'
-import AuthHelper from '@/helpers/AuthHelper'
 import UserHelper from '@/helpers/UserHelper'
 import { FieldValidation } from '@/types/FieldValidation'
-import { SnackBarDetails } from '@/models/SnackBarDetails'
+import Snackbar from '../UI/Snackbar.vue'
+import SnackBarDetails from '@/models/SnackBarDetails'
 
-@Component
+@Component({
+    components: { Snackbar }
+})
 export default class SignUp extends Vue {
     // Data property
     user: User = new User()
@@ -172,19 +175,16 @@ export default class SignUp extends Vue {
             this.requestIsPending = true
             UserHttpService.register(this.user)
                 .then((response: AxiosResponse): void => {
-                    AuthHelper.setTokenInLocalStorage(response.data.token)
-                    console.log('success')
                     this.snackBarDetails = {
                         isActive: true,
-                        message: 'Front or API success ?',
-                        color: 'success'
+                        message: response.statusText,
+                        color: 'error'
                     }
                 })
-                .catch((): void => {
-                    console.log('error')
+                .catch((error: AxiosResponse): void => {
                     this.snackBarDetails = {
                         isActive: true,
-                        message: 'Front or API error ?',
+                        message: error.statusText,
                         color: 'error'
                     }
                 })

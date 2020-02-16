@@ -1,0 +1,8 @@
+{
+  "login": {
+    "token": "jwt token"
+  },
+  "register": {
+      "token": "jwt token"
+  }
+}

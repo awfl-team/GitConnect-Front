@@ -63,7 +63,8 @@ import UserHelper from '@/helpers/UserHelper'
 import { FieldValidation } from '@/types/FieldValidation'
 import UserHttpService from '@/httpServices/UserHttpService'
 import Snackbar from '../UI/Snackbar.vue'
-import { SnackBarDetails } from '@/models/SnackBarDetails'
+import SnackBarDetails from '@/models/SnackBarDetails'
+import AuthHelper from '@/helpers/AuthHelper'
 
 @Component({
     components: { Snackbar }
@@ -113,18 +114,17 @@ export default class SignIn extends Vue {
             this.requestIsPending = true
             UserHttpService.login(this.login, this.password)
                 .then((response: AxiosResponse): void => {
-                    console.log('success')
+                    AuthHelper.setTokenInLocalStorage(response.data.token)
                     this.snackBarDetails = {
                         isActive: true,
-                        message: 'Front or API success ?',
-                        color: 'error'
+                        message: response.statusText,
+                        color: 'success'
                     }
                 })
-                .catch((): void => {
-                    console.log('error')
+                .catch((error: AxiosResponse): void => {
                     this.snackBarDetails = {
                         isActive: true,
-                        message: 'Front or API error ?',
+                        message: error.statusText,
                         color: 'error'
                     }
                 })
