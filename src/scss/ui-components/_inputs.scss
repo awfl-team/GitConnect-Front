@@ -1,6 +1,12 @@
 .v-input {
     margin-bottom: 10px !important;
 
+    &__icon {
+        .v-icon {
+            color: $white-67 !important;
+        }
+    }
+
     fieldset {
         border-color: $primary !important;
         background-color: $bg-focus !important;

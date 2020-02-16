@@ -19,6 +19,7 @@ rules:
   '@typescript-eslint/no-use-before-define': 'off'
   '@typescript-eslint/camelcase': 'warn'
   'require-await': 'off'
+  'no-console': 'warn'
   '@typescript-eslint/interface-name-prefix': 'warn'
   'no-duplicate-imports': 'error'
   'no-unneeded-ternary': 'error'

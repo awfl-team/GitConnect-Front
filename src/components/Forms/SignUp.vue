@@ -1,13 +1,15 @@
 <template id="signup">
     <v-container fluid>
         <v-row align="center">
-            <v-form ref="form" id="form-signup" v-model="valid" lazy-validation>
+            <v-form ref="form" id="form-signup" @submit.prevent="validateAndSubmitFormIfIsValid">
                 <v-col cols="12">
                     <v-text-field
                         label="E-mail *"
-                        :model="user.email"
-                        :rules="[emailRules]"
-                        :success="emailRules && !!user.email"
+                        v-model="user.email"
+                        @change="validateField('email')"
+                        :error-messages="!emailValidation.isValid ? emailValidation.message : ''"
+                        :success-messages="emailValidation.isValid ? emailValidation.message : ''"
+                        :hint="getFieldHint('email')"
                         required
                         outlined
                         dark
@@ -19,9 +21,15 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Username *"
-                        :model="user.username"
-                        :rules="[usernameRules]"
-                        :success="usernameRules && !!user.username"
+                        v-model="user.username"
+                        @change="validateField('username')"
+                        :error-messages="
+                            !usernameValidation.isValid ? usernameValidation.message : ''
+                        "
+                        :success-messages="
+                            usernameValidation.isValid ? usernameValidation.message : ''
+                        "
+                        :hint="getFieldHint('username')"
                         outlined
                         dark
                         required
@@ -32,10 +40,19 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Password *"
-                        :model="user.password"
-                        :rules="[passwordRules]"
-                        :success="passwordRules && !!user.password"
-                        type="password"
+                        v-model="user.password"
+                        @keyup="validateField('password')"
+                        :error-messages="
+                            !passwordValidation.isValid ? passwordValidation.message : ''
+                        "
+                        :success="passwordValidation.isValid"
+                        :success-messages="
+                            passwordValidation.isValid ? passwordValidation.message : ''
+                        "
+                        :hint="getFieldHint('password')"
+                        :append-icon="passwordTextShouldBeVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="passwordTextShouldBeVisible ? 'text' : 'password'"
+                        @click:append="showPasswordText"
                         outlined
                         dark
                         required
@@ -46,84 +63,135 @@
                 <v-col cols="12">
                     <v-text-field
                         label="Confirm password *"
-                        :model="confirmPassword"
-                        :rules="[confirmPasswordRules, passwordAndConfirmPasswordRules]"
-                        :success="
-                            confirmPasswordRules &&
-                                passwordAndConfirmPasswordRules &&
-                                !!confirmPassword
+                        v-model="user.confirmPassword"
+                        @keyup="validateField('password')"
+                        :error-messages="
+                            !passwordValidation.isValid ? passwordValidation.message : ''
                         "
+                        :success-messages="
+                            passwordValidation.isValid ? passwordValidation.message : ''
+                        "
+                        :hint="getFieldHint('confirmPassword')"
+                        :append-icon="passwordTextShouldBeVisible ? 'mdi-eye' : 'mdi-eye-off'"
+                        :type="passwordTextShouldBeVisible ? 'text' : 'password'"
+                        @click:append="showPasswordText"
                         outlined
                         dark
-                        type="password"
                         required
                         autocomplete="off"
                     ></v-text-field>
                 </v-col>
 
                 <v-col cols="12">
-                    <v-checkbox
-                        :rules="[v => !!v || 'You must agree to continue!']"
-                        label="I understand that the given informations are only used to access to GitConnect's services"
-                        required
-                    ></v-checkbox>
-                </v-col>
-
-                <v-col cols="12">
                     <div class="button-submit-container">
-                        <button type="submit" class="btn btn-main">
-                            Sign up
+                        <button type="submit" class="btn btn-main" :disabled="requestIsPending">
+                            <span v-if="!requestIsPending">Sign up</span>
+                            <v-progress-circular
+                                indeterminate
+                                color="primary"
+                                :size="25"
+                                v-else
+                            ></v-progress-circular>
                         </button>
                     </div>
                 </v-col>
             </v-form>
         </v-row>
+        <snackbar v-bind:snackBarDetails="snackBarDetails" />
     </v-container>
 </template>
 
 <script lang="ts">
 import Vue from 'vue'
 import { Component } from 'vue-property-decorator'
+import { AxiosResponse } from 'axios'
+import User from '@/models/User'
+import UserHttpService from '@/httpServices/UserHttpService'
 import UserHelper from '@/helpers/UserHelper'
-import { User } from '@/models/User'
+import { FieldValidation } from '@/types/FieldValidation'
+import Snackbar from '../UI/Snackbar.vue'
+import SnackBarDetails from '@/models/SnackBarDetails'
 
-@Component
-export default class App extends Vue {
-    $refs!: {
-        form: HTMLFormElement
-    }
-
+@Component({
+    components: { Snackbar }
+})
+export default class SignUp extends Vue {
     // Data property
     user: User = new User()
-    confirmPassword!: string
-    valid!: boolean
+    formIsValid = false
+    requestIsPending = false
+    passwordTextShouldBeVisible = false
+    usernameValidation: FieldValidation = { isValid: false, message: '' }
+    emailValidation: FieldValidation = { isValid: false, message: '' }
+    passwordValidation: FieldValidation = { isValid: false, message: '' }
+    snackBarDetails: SnackBarDetails = { isActive: false }
 
-    usernameRules(username: string): boolean | string {
-        this.user.username = username
-        return UserHelper.verifyUserUsernameFormat(username)
+    // Methods
+    validateField(fieldName: string): void {
+        switch (fieldName) {
+            case 'username':
+                this.usernameValidation = UserHelper.verifyUsernameFormat(this.user.username)
+                break
+            case 'email':
+                this.emailValidation = UserHelper.verifyEmailFormat(this.user.email)
+                break
+            case 'password':
+                this.passwordValidation = UserHelper.verifyPasswordFormat(
+                    this.user.password,
+                    this.user.confirmPassword
+                )
+                break
+        }
     }
-    emailRules(email: string): boolean | string {
-        this.user.email = email
-        return UserHelper.verifyUserMailFormat(email)
+
+    getFieldHint(fieldName: string): string {
+        return UserHelper.getFieldHintByType(fieldName)
     }
-    passwordRules(password: string): boolean | string {
-        this.user.password = password
-        return UserHelper.verifyPasswordOrConfirmPasswordFormat(password)
+
+    showPasswordText(): void {
+        this.passwordTextShouldBeVisible = !this.passwordTextShouldBeVisible
     }
-    confirmPasswordRules(confirmPassword: string): boolean | string {
-        this.confirmPassword = confirmPassword
-        return UserHelper.verifyPasswordOrConfirmPasswordFormat(confirmPassword)
-    }
-    passwordAndConfirmPasswordRules(): boolean | string {
-        return UserHelper.verifyPasswordAndConfirmPassword(this.user.password, this.confirmPassword)
-    }
-    validateForm(): void {
-        if (this.$refs.form.validate()) {
+
+    validateAndSubmitFormIfIsValid(): void {
+        this.usernameValidation = UserHelper.verifyUsernameFormat(this.user.username)
+        this.emailValidation = UserHelper.verifyEmailFormat(this.user.email)
+        this.passwordValidation = UserHelper.verifyPasswordFormat(
+            this.user.password,
+            this.user.confirmPassword
+        )
+
+        if (
+            this.usernameValidation.isValid &&
+            this.passwordValidation.isValid &&
+            this.emailValidation.isValid
+        ) {
+            this.formIsValid = true
             this.submitForm()
         }
     }
+
     submitForm(): void {
-        alert('FormIsSubmitted')
+        if (this.formIsValid) {
+            this.requestIsPending = true
+            UserHttpService.register(this.user)
+                .then((response: AxiosResponse): void => {
+                    this.snackBarDetails = {
+                        isActive: true,
+                        message: response.statusText,
+                        color: 'error'
+                    }
+                })
+                .catch((error: AxiosResponse): void => {
+                    this.snackBarDetails = {
+                        isActive: true,
+                        message: error.statusText,
+                        color: 'error'
+                    }
+                })
+                .finally((): void => {
+                    this.requestIsPending = false
+                })
+        }
     }
 }
 </script>

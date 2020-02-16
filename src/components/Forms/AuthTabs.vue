@@ -11,12 +11,17 @@
     </v-tabs>
 </template>
 
-<script>
+<script lang="ts">
+import Vue from 'vue'
+import { Component } from 'vue-property-decorator'
 import SignIn from './SignIn.vue'
 import SignUp from './SignUp.vue'
 
-export default {
-    name: 'AuthTabs',
-    components: { SignIn, SignUp }
-}
+@Component({
+    components: {
+        SignIn,
+        SignUp
+    }
+})
+export default class AuthTabs extends Vue {}
 </script>
